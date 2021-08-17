@@ -29,7 +29,10 @@ class Ability_var(models.Model):
     ability = models.ForeignKey(Ability, on_delete=models.CASCADE,null=True)
     version = models.ForeignKey(Version, on_delete=models.CASCADE,null=True)
     description = models.CharField(max_length=500,null=True)
-    is_present = models.BooleanField(null=True)
+    is_present=models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.ability.name.title()+"(ver.: "+self.version.name+")"
 
 class Type(models.Model):
     """The different families of Pokemons"""
@@ -47,8 +50,11 @@ class Type(models.Model):
 class Type_var(models.Model):
     """Just to link things unique to their own variations"""
     type=models.ForeignKey(Type, on_delete=models.CASCADE,null=True)
-    is_present=models.BooleanField(default=False,null=True)
+    is_present=models.BooleanField(default=False)
     version=models.ForeignKey(Version,on_delete=models.CASCADE,null=True)
+
+    def __str__(self):
+        return self.type.name.upper()+"(ver.: "+self.version.name+")"
 
 class Damage_class(models.Model):
     """to refer the 3 types of damage class"""
@@ -81,6 +87,9 @@ class Move_var(models.Model):
     type=models.ForeignKey(Type,on_delete=models.CASCADE,null=True)
     version=models.ForeignKey(Version,on_delete=models.CASCADE,null=True)
 
+    def __str__(self):
+        return self.move.name.title()+"(ver.: "+self.version.name+")"
+
 class Pokemon(models.Model):
     """Models a pokemon"""
     index = models.IntegerField(null=True)
@@ -108,5 +117,9 @@ class Pokemon_var(models.Model):
     """Models the variations in a pokemon between different versions"""
     pokemon = models.ForeignKey(Pokemon, on_delete=models.CASCADE,null=True)
     version = models.ForeignKey(Version, on_delete=models.CASCADE,null=True)
+    is_present=models.BooleanField(default=False)
     moves = models.ManyToManyField(Move)
     types = models.ManyToManyField(Type)
+
+    def __str__(self):
+        return self.pokemon.name.title()+"(ver.: "+self.version.name+")"
