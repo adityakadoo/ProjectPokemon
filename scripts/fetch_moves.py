@@ -32,13 +32,15 @@ def run(*args):
         
         """Doing the Linking work"""
         # move_temp2=Move.objects.get()
-        damage_class_url=response_dict["damage_class"]["url"].split("/")
-        damage_class_index=int(damage_class_url[-2])
-        damage_class_name=response_dict["damage_class"]["name"]
-        # print(damage_class_name)
-        # print(damage_class_index)
-        # break
-        move_temp.damage_class=Damage_class.objects.get_or_create(index=damage_class_index,name=damage_class_name)
+        if response_dict["damage_class"]!=None:
+            damage_class_url=response_dict["damage_class"]["url"].split("/")
+            damage_class_index=int(damage_class_url[-2])
+            damage_class_name=response_dict["damage_class"]["name"]
+            # print(damage_class_name)
+            # print(damage_class_index)
+            # break
+            damage_class_temp,created = Damage_class.objects.get_or_create(index=damage_class_index,name=damage_class_name)
+            move_temp.damage_class = damage_class_temp
 
         generation_url = response_dict["generation"]["url"].split("/")
         generation = int(generation_url[-2])
@@ -56,28 +58,28 @@ def run(*args):
             new_temp=Type.objects.get(name=type_name_for_now)
             
 
-            for i in response_dict["past_values"]:
-                pos_url=i["version_group"]["url"].split("/")
+            for e1 in response_dict["past_values"]:
+                pos_url=e1["version_group"]["url"].split("/")
                 pos=int(pos_url[-2])
                 if pos<e.index:
-                    if i["accuracy"]!=None:
-                        move_var_temp.accuracy=i["accuracy"]
-                    if i["power"]!=None:
-                        move_var_temp.power=i["power"]
-                    if i["pp"]!=None:
-                        move_var_temp.pp=i["pp"]
-                    if i["priority"]!=None:
-                        move_var_temp.priority=i["priority"]
-                    if i["type"]!=None:
-                        new_type_name=i["type"]
+                    if e1["accuracy"]!=None:
+                        move_var_temp.accuracy=e1["accuracy"]
+                    if e1["power"]!=None:
+                        move_var_temp.power=e1["power"]
+                    if e1["pp"]!=None:
+                        move_var_temp.pp=e1["pp"]
+                    # if e1["priority"]!=None:
+                    #     move_var_temp.priority=e1["priority"]
+                    if e1["type"]!=None:
+                        new_type_name=e1["type"]["name"]
                         new_temp=Type.objects.get(name=new_type_name)
 
             """Linking the type as we have a final say on it"""
             move_var_temp.type=new_temp           
                         
-            for i in response_dict["flavour_text_entries"]:
-                if i["language"]["name"]=="en" and i["version_group"]["name"]==e.name:
-                    move_var_temp.description=i["flavor_text"]
+            for e2 in response_dict["flavor_text_entries"]:
+                if e2["language"]["name"]=="en" and e2["version_group"]["name"]==e.name:
+                    move_var_temp.description=e2["flavor_text"]
             move_var_temp.save()
         i+=1
 

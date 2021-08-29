@@ -14,10 +14,18 @@ class Version(models.Model):
     def __str__(self):
         return self.name
 
+class Game(models.Model):
+    index = models.IntegerField(null=True)
+    name = models.CharField(max_length=50,null=True)
+    version = models.ForeignKey(Version,on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name.title()
+
 class Ability(models.Model):
     """Models a pokemon ability"""
     index = models.IntegerField(null=True)
-    name = models.CharField(max_length=50,null=True)
+    name = models.CharField(max_length=30,null=True)
     effect = models.CharField(max_length=2000,null=True)
     versions = models.ManyToManyField(Version, through='Ability_var')
 
@@ -28,8 +36,7 @@ class Ability_var(models.Model):
     """Models the variations of a pokemon ablility between different versions"""
     ability = models.ForeignKey(Ability, on_delete=models.CASCADE,null=True)
     version = models.ForeignKey(Version, on_delete=models.CASCADE,null=True)
-    description = models.CharField(max_length=500,null=True)
-    is_present=models.BooleanField(default=False)
+    description = models.CharField(max_length=200,null=True)
 
     def __str__(self):
         return self.ability.name.title()+"(ver.: "+self.version.name+")"
@@ -38,9 +45,9 @@ class Type(models.Model):
     """The different families of Pokemons"""
     index=models.IntegerField(null=True)
     name=models.CharField(max_length=30,null=True)
-    super_eff_against=models.ForeignKey('self',null=True,related_name='super_eff_from',on_delete=models.CASCADE)
-    half_damage_against=models.ForeignKey('self',null=True,related_name='half_damage_from',on_delete=models.CASCADE)
-    ineff_against=models.ForeignKey('self',null=True,related_name='ineff_from',on_delete=models.CASCADE)
+    super_eff_against=models.ManyToManyField('self',related_name='super_eff_from')
+    half_damage_against=models.ManyToManyField('self',related_name='half_damage_from',symmetrical=False)
+    ineff_against=models.ManyToManyField('self',related_name='ineff_from',symmetrical=False)
     color=models.CharField(max_length=10,null=True)
     versions=models.ManyToManyField(Version,through='Type_var')
 
@@ -50,7 +57,6 @@ class Type(models.Model):
 class Type_var(models.Model):
     """Just to link things unique to their own variations"""
     type=models.ForeignKey(Type, on_delete=models.CASCADE,null=True)
-    # is_present=models.BooleanField(default=False)
     version=models.ForeignKey(Version,on_delete=models.CASCADE,null=True)
 
     def __str__(self):
@@ -78,7 +84,6 @@ class Move(models.Model):
 class Move_var(models.Model):
     """Linking moves with its versions"""
     description=models.CharField(max_length=2000,null=True)
-    # is_present=models.BooleanField(default=False)
     power=models.IntegerField(null=True)
     accuracy=models.IntegerField(null=True)
     pp=models.IntegerField(null=True)
@@ -93,12 +98,12 @@ class Move_var(models.Model):
 class Pokemon(models.Model):
     """Models a pokemon"""
     index = models.IntegerField(null=True)
-    name = models.IntegerField(null=True)
+    name = models.CharField(max_length=50,null=True)
     base_experience = models.IntegerField(null=True)
     height = models.IntegerField(null=True)
     weight = models.IntegerField(null=True)
     species = models.CharField(max_length=50,null=True)
-    official_artwork = models.ImageField(null=True)
+    official_artwork = models.ImageField(upload_to = f"pokedex/images/",null=True)
     #stats
     hp = models.IntegerField(null=True)
     attack = models.IntegerField(null=True)
@@ -109,6 +114,8 @@ class Pokemon(models.Model):
     #linked data
     abilities = models.ManyToManyField(Ability)
     versions = models.ManyToManyField(Version, through='Pokemon_var')
+    prev_evolution = models.ForeignKey('self',null=True,related_name="evolutions",on_delete=models.CASCADE)
+    types = models.ManyToManyField(Type)
 
     def __str__(self):
         return self.name.title()
@@ -117,9 +124,24 @@ class Pokemon_var(models.Model):
     """Models the variations in a pokemon between different versions"""
     pokemon = models.ForeignKey(Pokemon, on_delete=models.CASCADE,null=True)
     version = models.ForeignKey(Version, on_delete=models.CASCADE,null=True)
-    is_present=models.BooleanField(default=False)
     moves = models.ManyToManyField(Move)
-    types = models.ManyToManyField(Type)
+    game_entries = models.ManyToManyField(Game,through='Pokedex_entries')
 
     def __str__(self):
         return self.pokemon.name.title()+"(ver.: "+self.version.name+")"
+
+class Pokedex_entries(models.Model):
+    """Models the connection between Pokemon_var and Game to store pokedex entries"""
+    pokemon_var = models.ForeignKey(Pokemon_var,null=True,on_delete=models.CASCADE)
+    game = models.ForeignKey(Game,null=True,on_delete=models.CASCADE)
+    entry = models.CharField(max_length=1000,null=True)
+
+class Pokedex(models.Model):
+    index = models.IntegerField(null=True)
+    name = models.CharField(max_length=30,null=True)
+    pokemon_entries = models.ManyToManyField(Pokemon)
+    versions = models.ManyToManyField(Version)
+
+    def __str__(self):
+        return self.name
+        

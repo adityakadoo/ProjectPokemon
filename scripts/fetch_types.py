@@ -41,19 +41,16 @@ def run(*args):
 
         """Linking the self related objects to each other"""        
         for e in response_dict["damage_relations"]["double_damage_to"]:
-            temp3=Type.objects.get(name=e["name"])
-            # type_temp2.super_eff_against=(temp3)
-            temp3.super_eff_from.add(type_temp2)
+            temp3=Type.objects.filter(name=e["name"])
+            type_temp2.super_eff_against.add(temp3[0])
             
         for e in response_dict["damage_relations"]["half_damage_to"]:
-            temp3=Type.objects.get(name=e["name"])
-            # type_temp2.half_damage_against=(temp3)
-            temp3.half_damage_from.add(type_temp2)
+            temp3=Type.objects.filter(name=e["name"])
+            type_temp2.half_damage_against.add(temp3[0])
         
         for e in response_dict["damage_relations"]["no_damage_to"]:
-            temp3=Type.objects.get(name=e["name"])
-            temp3.ineff_from.add(type_temp2)
-            # type_temp2.ineff_against=(temp3)
+            temp3=Type.objects.filter(name=e["name"])
+            type_temp2.ineff_against.add(temp3[0])
         
         generation_url = response_dict["generation"]["url"].split("/")
         generation = int(generation_url[-2])
