@@ -38,9 +38,9 @@ class Type(models.Model):
     """The different families of Pokemons"""
     index=models.IntegerField(null=True)
     name=models.CharField(max_length=30,null=True)
-    super_eff_against=models.ManyToManyField('self',blank=True)
-    half_damage_against=models.ManyToManyField('self',blank=True)
-    ineff_against=models.ManyToManyField('self',blank=True)
+    super_eff_against=models.ForeignKey('self',null=True,related_name='super_eff_from',on_delete=models.CASCADE)
+    half_damage_against=models.ForeignKey('self',null=True,related_name='half_damage_from',on_delete=models.CASCADE)
+    ineff_against=models.ForeignKey('self',null=True,related_name='ineff_from',on_delete=models.CASCADE)
     color=models.CharField(max_length=10,null=True)
     versions=models.ManyToManyField(Version,through='Type_var')
 
@@ -50,7 +50,7 @@ class Type(models.Model):
 class Type_var(models.Model):
     """Just to link things unique to their own variations"""
     type=models.ForeignKey(Type, on_delete=models.CASCADE,null=True)
-    is_present=models.BooleanField(default=False)
+    # is_present=models.BooleanField(default=False)
     version=models.ForeignKey(Version,on_delete=models.CASCADE,null=True)
 
     def __str__(self):
@@ -78,7 +78,7 @@ class Move(models.Model):
 class Move_var(models.Model):
     """Linking moves with its versions"""
     description=models.CharField(max_length=2000,null=True)
-    is_present=models.BooleanField(default=False)
+    # is_present=models.BooleanField(default=False)
     power=models.IntegerField(null=True)
     accuracy=models.IntegerField(null=True)
     pp=models.IntegerField(null=True)
