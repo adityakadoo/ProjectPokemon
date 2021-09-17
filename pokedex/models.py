@@ -28,4 +28,4 @@ class Resource(models.Model):
         verbose_name_plural = "Resources"
     
     def __str__(self) -> str:
-        return self.name.title()
+        return str(self.endpoint)+" : "+self.name.title()
