@@ -1,6 +1,5 @@
 from django.http.response import Http404
 from django.shortcuts import render, HttpResponse
-from django.views import View
 from .models import Endpoint,Resource
 from datetime import timedelta
 from django.utils import timezone
@@ -18,16 +17,19 @@ def home(request):
     response = "<html><body>Hello World</body></html>"
     return HttpResponse(response)
 
-def pokemon(request,name):
-    pokemon_endpoint = Endpoint.objects.get(name='pokemon')
+def get_resource(request,endpoint_name,resource_name):
     try:
-        pokemon = Resource.objects.get(name=name, endpoint=pokemon_endpoint)
+        endpoint = Endpoint.objects.get(name=endpoint_name)
+    except Endpoint.DoesNotExist:
+        raise Http404
+    try:
+        resource = Resource.objects.get(name=resource_name, endpoint=endpoint)
     except Resource.DoesNotExist:
         raise Http404
     now = timezone.now()
     renewal_period = timedelta(days=RENEWAL_PERIOD)
-    if pokemon.last_updated + renewal_period < now:
-        resource_calls.update_pokemon(pokemon)
+    if resource.last_updated + renewal_period < now:
+        resource_calls.update_resource(endpoint,resource)
 
-    response = "<html><body>Hello World "+name+"</body></html>"
+    response = "<html><body>Hello World "+str(resource)+"</body></html>"
     return HttpResponse(response)

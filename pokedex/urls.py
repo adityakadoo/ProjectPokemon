@@ -7,5 +7,5 @@ urlpatterns = [
     # Home page
     path('', views.home, name='index'),
     # Pokemon detail view page
-    path('pokemon/<slug:name>', views.pokemon, name='pokemon'),
+    path('<slug:endpoint_name>/<slug:resource_name>', views.get_resource, name='resource'),
 ]
