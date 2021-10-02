@@ -1,6 +1,8 @@
 import requests
 from django.utils import timezone
 
+from pokedex.models import Endpoint
+
 def remove_escape_chars(s):
     escapes = ''.join([chr(char) for char in range(1, 32)])
     translator = str.maketrans('', '', escapes)
@@ -140,7 +142,14 @@ def update_resource(endpoint,resource):
         move_data['pokemons'] = [e['name'] for e in response_dict['learned_by_pokemon']]
 
         '''Add the stats and other version changes here'''
-
+        move_data['power']['latest']=response_dict['power']
+        move_data['accuracy']['latest']=response_dict['accuracy']
+        move_data['pp']['latest']=response_dict['pp']
+        move_data['priority']=response_dict['priority']
+        for e in response_dict['past_values']:
+            move_data['power'][e['version_group']['name']]=e['power']
+            move_data['accuracy'][e['version_group']['name']]=e['accuracy']
+            move_data['pp'][e['version_group']['name']]=e['pp']
         resource.data = move_data
 
     resource.last_updated = timezone.now()
