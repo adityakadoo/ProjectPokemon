@@ -132,3 +132,7 @@ dmypy.json
 *.png
 *.pdf
 *.dot
+!static/images/default.png
+
+# React Stuff
+node_modules
