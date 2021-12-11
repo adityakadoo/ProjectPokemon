@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<ol>
+    {% for endpoint in endpoints %}
+    <li>
+        {{ endpoint.name }}({{ endpoint.count }}) - {{ endpoint.last_updated|date:'M d, Y H:i' }}
+    </li>
+    {% empty %}
+    <li>
+        No Endpoints
+    </li>
+    {% endfor %}
+</ol>
+<div class="resource_list">
+    {% for e_name,e_resources in resources.items %}
+    {% for resource in e_resources %}
+        <div class="list_item">
+            <div class="inner_box">
+            {{ resource }}
+            </div>
+        </div>
+    {% endfor %}
+    {% empty %}
+    <div class="center">
+        No resources
+    </div>
+    {% endfor %}
+</div>
+{% endblock content %}

@@ -17,8 +17,8 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # config
-MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = ""
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -63,7 +63,7 @@ ROOT_URLCONF = 'ProjectPokemon.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -136,9 +136,9 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
 
-MEDIA_ROOT = (
-    BASE_DIR
-)
+# MEDIA_ROOT = (
+#     BASE_DIR
+# )
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

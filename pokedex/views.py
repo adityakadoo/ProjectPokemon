@@ -5,17 +5,28 @@ from datetime import timedelta
 from django.utils import timezone
 from .api_calls import endpoint_calls, resource_calls
 
-RENEWAL_PERIOD = 180
+RENEWAL_PERIOD = -180
 
 # Create your views here.
 def home(request):
+    context = {
+        'endpoints' : [],
+        'resources' : dict()
+    }
     for endpoint in Endpoint.objects.all():
         now = timezone.now()
         renewal_period = timedelta(days=RENEWAL_PERIOD)
         if endpoint.last_updated + renewal_period < now:
             endpoint_calls.update_endpoint(endpoint)
-    response = "<html><body>Hello World</body></html>"
-    return HttpResponse(response)
+        context['endpoints'].append(endpoint)
+        context['resources'][endpoint.name] = []
+        count = 0
+        for resource in Resource.objects.filter(endpoint=endpoint).order_by('index'):
+            context['resources'][endpoint.name].append(resource)
+            count += 1
+            if count>10:
+                break
+    return render(request,'pokedex/index.html',context)
 
 def get_resource(request,endpoint_name,resource_name):
     try:

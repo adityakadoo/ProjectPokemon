@@ -1,5 +1,7 @@
 import requests
 from django.utils import timezone
+import os
+from django.core.files import File
 
 from pokedex.models import Endpoint
 
@@ -8,6 +10,9 @@ def remove_escape_chars(s):
     translator = str.maketrans('', '', escapes)
     t = s.translate(translator)
     return t
+
+def get_filename(s):
+    return s.replace('-','_')
 
 def update_resource(endpoint,resource):
     response = requests.get("https://pokeapi.co/api/v2/"+str(endpoint.name)+"/"+str(resource.name))
@@ -62,7 +67,19 @@ def update_resource(endpoint,resource):
                     'method': e2['move_learn_method']['name'],
                 }
                 pokemon_data['moves'][e2['version_group']['name']].append(move_dict)
-        
+
+        image_url = response_dict["sprites"]["other"]["official-artwork"]["front_default"]
+        if image_url==None:
+            image_url = response_dict["sprites"]["other"]["dream_world"]["front_default"]
+        if image_url==None:
+            image_url = response_dict["sprites"]["front_default"]
+        image_response = requests.get(image_url)
+        with open("temp.png",'wb') as f:
+            f.write(image_response.content)
+        os.remove("static/images/pokemon/"+get_filename(response_dict['name']+".png"))
+        resource.image.save(get_filename("pokemon/"+response_dict['name']+".png"),File(open("temp.png",'rb')))
+        os.remove("temp.png")
+
         resource.data = pokemon_data
     elif endpoint.name == 'ability':
         ability_data = {}
@@ -122,6 +139,8 @@ def update_resource(endpoint,resource):
         type_data['pokemons'] = [e['pokemon']['name'] for e in response_dict['pokemon']]
         type_data['moves'] = [e['name'] for e in response_dict['moves']]
 
+# https://upload.wikimedia.org/wikipedia/commons/3/3c/Pok%C3%A9mon_Bug_Type_Icon.svg
+
         resource.data = type_data
     elif endpoint.name == 'move':
         generation_url = response_dict["generation"]["url"].split("/")
@@ -142,9 +161,9 @@ def update_resource(endpoint,resource):
         move_data['pokemons'] = [e['name'] for e in response_dict['learned_by_pokemon']]
 
         '''Add the stats and other version changes here'''
-        move_data['power']['latest']=response_dict['power']
-        move_data['accuracy']['latest']=response_dict['accuracy']
-        move_data['pp']['latest']=response_dict['pp']
+        move_data['power'] = {'latest': response_dict['power']}
+        move_data['accuracy'] = { 'latest': response_dict['accuracy']}
+        move_data['pp'] = { 'latest': response_dict['pp']}
         move_data['priority']=response_dict['priority']
         for e in response_dict['past_values']:
             move_data['power'][e['version_group']['name']]=e['power']

@@ -1,0 +1,33 @@
+.main {
+    font-family:'Fira Sans', 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    overflow-wrap: break-word;
+    color: #000;
+}
+
+.resource_list {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-evenly;
+    height: 80vh;
+    overflow-y: scroll;
+}
+
+.list_item {
+    display: flex;
+    flex-wrap: wrap;
+    height: 250px;
+    width: 200px;
+    margin: 5px;
+    padding: 10px;
+    background-color: rgb(174, 45, 185);
+    border-radius: 20px;
+}
+
+.inner_box {
+    display: block;
+    background-color: rgb(255, 255, 255);
+    border-radius: 10px;
+    flex: 100;
+    padding: 2px;
+}
