@@ -5,6 +5,6 @@ const context = JSON.parse(JSON.parse(document.getElementById('context').textCon
 console.log(context)
 
 ReactDOM.render(
-  <h1>Hello, { context.endpoints[0] }</h1>,
+  <h1>Hello, #{ context.index } - { context.name }!</h1>,
   document.getElementById('root')
 );

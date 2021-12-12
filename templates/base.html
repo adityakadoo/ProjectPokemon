@@ -8,13 +8,8 @@
         <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
     </head>
     <body>
-        <div style="height: 20px; padding: 10px;">
-            <div id="root" />
-            <script src="{% static 'js/index-bundle.js' %}"></script>
-        </div>
-        <hr>
-        <div class="main">
+        <div id="root" />
+        {{ context_str|json_script:"context" }}
         {% block content %}{% endblock content %}
-        </div>
     </body>
 </html>

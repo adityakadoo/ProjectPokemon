@@ -3,8 +3,6 @@ from django.utils import timezone
 import os
 from django.core.files import File
 
-from pokedex.models import Endpoint
-
 def remove_escape_chars(s):
     escapes = ''.join([chr(char) for char in range(1, 32)])
     translator = str.maketrans('', '', escapes)
@@ -14,13 +12,13 @@ def remove_escape_chars(s):
 def get_filename(s):
     return s.replace('-','_')
 
-def update_resource(endpoint,resource):
-    response = requests.get("https://pokeapi.co/api/v2/"+str(endpoint.name)+"/"+str(resource.name))
+def update_resource(endpoint_name,resource):
+    response = requests.get("https://pokeapi.co/api/v2/"+str(endpoint_name)+"/"+str(resource.name))
     if response.status_code != 200:
         return False
     response_dict = response.json()
 
-    if endpoint.name == 'pokemon':
+    if endpoint_name == 'pokemon':
         pokemon_data = {
             'base_experience': response_dict["base_experience"],
             'height': response_dict["height"],
@@ -81,7 +79,7 @@ def update_resource(endpoint,resource):
         os.remove("temp.png")
 
         resource.data = pokemon_data
-    elif endpoint.name == 'ability':
+    elif endpoint_name == 'ability':
         ability_data = {}
 
         for e in response_dict['effect_entries']:
@@ -99,13 +97,13 @@ def update_resource(endpoint,resource):
         ability_data['pokemons'] = [e['pokemon']['name'] for e in response_dict['pokemon']]
 
         resource.data = ability_data
-    elif endpoint.name == 'version-group':
+    elif endpoint_name == 'version-group':
         generation_url = response_dict["generation"]["url"].split('/')
         version_group_data = {
             'generation': int(generation_url[len(generation_url)-2])
         }
         resource.data = version_group_data
-    elif endpoint.name == 'pokedex':
+    elif endpoint_name == 'pokedex':
         pokedex_data = {}
 
         for e in response_dict['descriptions']:
@@ -121,13 +119,13 @@ def update_resource(endpoint,resource):
             pokedex_data['pokemons'].append(e['pokemon_species']['name'])
 
         resource.data = pokedex_data
-    elif endpoint.name == 'version':
+    elif endpoint_name == 'version':
         version_data = {
             'version-group': response_dict["version_group"]["name"]
         }
 
         resource.data = version_data
-    elif endpoint.name == 'type':
+    elif endpoint_name == 'type':
         generation_url = response_dict["generation"]["url"].split("/")
         type_data = {
             'generation': int(generation_url[-2])
@@ -142,7 +140,7 @@ def update_resource(endpoint,resource):
 # https://upload.wikimedia.org/wikipedia/commons/3/3c/Pok%C3%A9mon_Bug_Type_Icon.svg
 
         resource.data = type_data
-    elif endpoint.name == 'move':
+    elif endpoint_name == 'move':
         generation_url = response_dict["generation"]["url"].split("/")
         move_data = {
             'type': response_dict['type']['name'],

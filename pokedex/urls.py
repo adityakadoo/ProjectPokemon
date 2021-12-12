@@ -5,7 +5,13 @@ from . import views
 app_name = 'pokedex'
 urlpatterns = [
     # Home page
-    path('', views.home, name='index'),
+    path('', views.get_home, name='home'),
     # Pokemon detail view page
-    path('<slug:endpoint_name>/<slug:resource_name>', views.get_resource, name='resource'),
+    path('pokemon/<int:index>', views.get_pokemon, name='pokemon'),
+    # Move detail view page
+    path('move/<int:index>', views.get_move, name='move'),
+    # Type detail view page
+    path('type/<int:index>', views.get_type, name='type'),
+    # Ability detail view page
+    path('ability/<int:index>', views.get_ability, name='ability'),
 ]

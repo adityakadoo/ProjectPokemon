@@ -21,7 +21,7 @@ class Resource(models.Model):
     last_updated = models.DateTimeField(default=datetime(2000,1,1,0,0,0,0))
     endpoint = models.ForeignKey(Endpoint,on_delete=models.CASCADE,null=True)
     data = models.JSONField(null=True)
-    image = models.ImageField(upload_to='static/images/',null=True)
+    image = models.ImageField(upload_to='',null=True)
 
     class Meta:
         ordering = ['index']

@@ -136,3 +136,4 @@ dmypy.json
 
 # React Stuff
 node_modules
+static/js/*
