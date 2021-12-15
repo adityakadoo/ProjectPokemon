@@ -17,7 +17,7 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # config
-MEDIA_URL = ""
+MEDIA_URL = "media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
 
 # Quick-start development settings - unsuitable for production
