@@ -1,0 +1,60 @@
+.card_outer {
+    display: block;
+    height: max-content;
+    width: 250px;
+    margin: 5px;
+    padding: 15px;
+    border-radius: 20px;
+    border-color: black;
+}
+
+.card_inner {
+    display: block;
+    height: max-content;
+    background-color: #121212;
+    border-radius: 10px;
+}
+
+.card_header {
+    padding: 4px;
+    text-decoration: underline;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+}
+
+.card_title{
+    font-size: 150%;
+    font-style: italic;
+    font-weight: 900;
+    padding: 4px;
+}
+
+.card_content {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    /* font-style: italic; */
+    font-weight: 700;
+}
+
+.card_header_enpoint{
+    float: left;
+}
+
+.card_header_index{
+    float: right;
+}
+
+.type_icon{
+    display: inline-block;
+    height: 40px;
+    width: 100px;
+    border-radius: 20px;
+    font-size: 150%;
+    padding: 2px 10px;
+    margin: 2px;
+    text-align: center;
+}
+
+table, th, td {
+  border-collapse: collapse;
+  font-size: 30px;
+  font-weight: lighter;
+}

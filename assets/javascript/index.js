@@ -1,7 +1,9 @@
 import React from 'react';
 import ReactDOM from "react-dom";
+import Card from './Card.js';
 import TypeIcon from './TypeIcon';
 import color_dict from './Resources.js';
+import '../styles/index.css';
 
 const context = JSON.parse(JSON.parse(document.getElementById('context').textContent));
 console.log(context);
@@ -9,24 +11,17 @@ console.log(context);
 function List() {
   return (
     <div className="resource_list">
-      <TypeIcon type='bug' height='200px' col1={color_dict['dark']} col2={color_dict['flying']} />
-      <TypeIcon type='dark' height='200px' col1={color_dict['dark']} col2={color_dict['flying']} />
-      <TypeIcon type='dragon' height='200px' col1={color_dict['dark']} col2={color_dict['flying']} />
-      <TypeIcon type='electric' height='200px' col1={color_dict['dark']} col2={color_dict['flying']} />
-      <TypeIcon type='fairy' height='200px' col1={color_dict['dark']} col2={color_dict['flying']} />
-      <TypeIcon type='fighting' height='200px' col1={color_dict['dark']} col2={color_dict['flying']} />
-      <TypeIcon type='fire' height='200px' col1={color_dict['dark']} col2={color_dict['flying']} />
-      <TypeIcon type='flying' height='200px' col1={color_dict['dark']} col2={color_dict['flying']} />
-      <TypeIcon type='ghost' height='200px' col1={color_dict['dark']} col2={color_dict['flying']} />
-      <TypeIcon type='grass' height='200px' col1={color_dict['dark']} col2={color_dict['flying']} />
-      <TypeIcon type='ground' height='200px' col1={color_dict['dark']} col2={color_dict['flying']} />
-      <TypeIcon type='ice' height='200px' col1={color_dict['dark']} col2={color_dict['flying']} />
-      <TypeIcon type='normal' height='200px' col1={color_dict['dark']} col2={color_dict['flying']} />
-      <TypeIcon type='poison' height='200px' col1={color_dict['dark']} col2={color_dict['flying']} />
-      <TypeIcon type='psychic' height='200px' col1={color_dict['dark']} col2={color_dict['flying']} />
-      <TypeIcon type='rock' height='200px' col1={color_dict['dark']} col2={color_dict['flying']} />
-      <TypeIcon type='steel' height='200px' col1={color_dict['dark']} col2={color_dict['flying']} />
-      <TypeIcon type='water' height='200px' col1={color_dict['dark']} col2={color_dict['flying']} />
+      <Card resource={context.resources[0]} />
+      <Card resource={context.resources[1]} />
+      <Card resource={context.resources[2]} />
+      <Card resource={context.resources[3]} />
+      <Card resource={context.resources[4]} />
+      <Card resource={context.resources[5]} />
+      <Card resource={context.resources[6]} />
+      <Card resource={context.resources[11]} />
+      <Card resource={context.resources[12]} />
+      <Card resource={context.resources[66]} />
+      <Card resource={context.resources[67]} />
     </div>
   );
 }

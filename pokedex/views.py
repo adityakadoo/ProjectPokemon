@@ -10,19 +10,22 @@ RENEWAL_PERIOD = 180
 
 def get_home(request):
     data = {
-        'endpoints' : [],
-        'resources' : dict()
+        'resources' : [],
     }
     for endpoint in Endpoint.objects.all():
         now = timezone.now()
         renewal_period = timedelta(days=RENEWAL_PERIOD)
         if endpoint.last_updated + renewal_period < now:
             endpoint_calls.update_endpoint(endpoint)
-        data['endpoints'].append(str(endpoint))
-        data['resources'][endpoint.name] = []
         count = 0
         for resource in Resource.objects.filter(endpoint=endpoint).order_by('index'):
-            data['resources'][endpoint.name].append(str(resource))
+            data['resources'].append({
+                'name': resource.name,
+                'index': resource.index,
+                'endpoint': endpoint.name,
+                'data': resource.data,
+                'imageURL': resource.image.url
+            })
             count += 1
             if count>10:
                 break

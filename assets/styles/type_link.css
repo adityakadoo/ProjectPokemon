@@ -1,0 +1,20 @@
+.type_link {
+    display: flex;
+    flex-direction: row;
+    width: 100px;
+    height: 40px;
+    border: 2px solid;
+    border-radius: 20px;
+}
+
+.type_link_icon {
+    flex: 30%;
+    padding: 2.5px;
+}
+
+.type_link_text {
+    flex: 60%;
+    font-size: 30px;
+    padding-top: 1.25px;
+    padding-bottom: 1.25px;
+}
