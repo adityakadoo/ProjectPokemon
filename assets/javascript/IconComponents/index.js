@@ -16,3 +16,8 @@ export { default as PsychicTypeIcon } from "./PsychicTypeIcon";
 export { default as RockTypeIcon } from "./RockTypeIcon";
 export { default as SteelTypeIcon } from "./SteelTypeIcon";
 export { default as WaterTypeIcon } from "./WaterTypeIcon";
+export { default as OpenPokeball } from "./OpenPokeball";
+export { default as Physical } from "./Physical";
+export { default as Pokeball } from "./Pokeball";
+export { default as Special } from "./Special";
+export { default as Status } from "./Status";

@@ -1,20 +1,48 @@
 .type_link {
     display: flex;
     flex-direction: row;
-    width: 100px;
-    height: 40px;
-    border: 2px solid;
-    border-radius: 20px;
+    width: 110px;
+    height: 50px;
+    padding: 0px;
+    border-radius: 25px;
+    margin: 5px;
+    cursor: pointer;
+    position: relative;
+    transition: box-shadow 500ms linear;
+    font-family: 'Anton', sans-serif;
+}
+
+.type_link::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    opacity: 0;
+}
+
+.type_link:hover, .type_link:focus {
+    text-shadow: none;
+}
+
+.type_link:hover::after, .type_link:focus::after {
+    opacity: 1;
 }
 
 .type_link_icon {
-    flex: 30%;
+    display: inline-block;
+    width: 35px;
+    height: 35px;
     padding: 2.5px;
 }
 
 .type_link_text {
-    flex: 60%;
-    font-size: 30px;
-    padding-top: 1.25px;
-    padding-bottom: 1.25px;
+    display: inline-block;
+    width: 60px;
+    height: 40px;
+    font-size: 25px;
+    line-height: 40px;
+    text-align: center;
+    text-decoration: none;
 }

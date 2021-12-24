@@ -43,6 +43,8 @@ function TypeIcon(props) {
             return <SteelTypeIcon {...props} />
         case 'water':
             return <WaterTypeIcon {...props} />
+        default:
+            return <div />;
     }
 }
 

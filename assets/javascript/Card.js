@@ -3,32 +3,26 @@ import React from 'react';
 import "../styles/card.css";
 import color_dict from './Resources';
 import TypeIcon from './TypeIcon';
+import DamageClassIcon from './DamageClassIcon';
 import TypeLink from './TypeLink';
+import { OpenPokeball, Pokeball } from './IconComponents/index';
 
 function PokemonContent(props) {
     if (props.resource.data.types.length == 2) {
         return (
-            <div className='card_content'>
-                <img src={".." + props.resource.imageURL} alt={props.resource.name + " image"} style={{ width: '246px' }} />
-                <div style={{ display: 'flex', flexDirection: 'row', width: '228px', height: '54px' }}>
-                    <div style={{ flex: '104px', margin: '5px' }}>
-                        <TypeLink typename={props.resource.data.types[0]} />
-                    </div>
-                    <div style={{ flex: '104px', margin: '5px' }}>
-                        <TypeLink typename={props.resource.data.types[1]} />
-                    </div>
+            <div className='card_content' style={{ backgroundImage: "linear-gradient(transparent 50%, " + color_dict['dark_bg'] + " 80%), url(.." + props.resource.imageURL + ")", paddingTop: "190px" }}>
+                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                    <TypeLink typename={props.resource.data.types[0]} />
+                    <TypeLink typename={props.resource.data.types[1]} />
                 </div>
             </div>
         );
     }
     else if (props.resource.data.types.length == 1) {
         return (
-            <div className='card_content'>
-                <img src={".." + props.resource.imageURL} alt={props.resource.name + " image"} style={{ width: '246px' }} />
-                <div style={{ display: 'flex', flexDirection: 'row', width: '228px', height: '54px' }}>
-                    <div style={{ flex: '104px', margin: '5px' }}>
-                        <TypeLink typename={props.resource.data.types[0]} />
-                    </div>
+            <div className='card_content' style={{ backgroundImage: "linear-gradient(transparent 50%, " + color_dict['dark_bg'] + " 80%), url(.." + props.resource.imageURL + ")", paddingTop: "190px" }}>
+                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                    <TypeLink typename={props.resource.data.types[0]} />
                 </div>
             </div>
         );
@@ -38,29 +32,25 @@ function PokemonContent(props) {
 function MoveContent(props) {
     return (
         <div className='card_content'>
-            <div style={{ display: 'flex', flexDirection: 'column', width: '250px', height: '154px' }}>
-                <div>
-                    <table style={{ width: '250px', height: '100px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <div style={{ padding: "0 25px"}}>
+                    <table style={{ width: '200px', height: '70px' }}>
                         <tbody>
                             <tr style={{ height: '50%' }}>
-                                <td style={{ width: '45%' }}>Power</td>
-                                <td style={{ width: '40%' }}>-</td>
-                                <td style={{ width: '15%' }}>{props.resource.data.power.latest}</td>
+                                <td style={{ width: '50%', textAlign: 'left' }}>Power</td>
+                                <td style={{ width: '50%', textAlign: 'right' }}>{props.resource.data.power}</td>
                             </tr>
                             <tr style={{ height: '50%' }}>
-                                <td>Accuracy</td>
-                                <td>-</td>
-                                <td>{props.resource.data.power.latest}</td>
+                                <td style={{textAlign: 'left'}}>Accuracy</td>
+                                <td style={{textAlign: 'right'}}>{props.resource.data.accuracy}</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-                <div style={{ flex: '104px', margin: '5px', display: 'flex', flexDirection: 'row' }}>
-                    <div style={{ flex: '114px' }}>
-                        <TypeLink typename={props.resource.data.type} />
-                    </div>
-                    <div style={{ flex: '116px', textAlign: 'right', fontSize: '30px', padding: '5px' }}>
-                        {toUpper(props.resource.data.damage_class.substring(0, 3))}
+                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                    <TypeLink typename={props.resource.data.type} />
+                    <div style={{ padding: "0 0 0 50px" }}>
+                        <DamageClassIcon damageclass={props.resource.data.damage_class} height="50px" />
                     </div>
                 </div>
             </div>
@@ -70,10 +60,10 @@ function MoveContent(props) {
 
 function TypeContent(props) {
     return (
-        <div className='card_content'>
+        <div className='card_content' style={{ maxHeight: "200px", overflow: "hidden", paddingLeft: "30px" }}>
             <TypeIcon type={props.resource.name}
                 alt={props.resource.name + " image"}
-                width='246px'
+                width='250px'
                 col1={color_dict[props.resource.name]}
                 col2={color_dict['dark_bg']} />
         </div>
@@ -92,7 +82,7 @@ class Card extends React.Component {
     }
 
     render() {
-        var type_col = ["#777777", "#777777"];
+        var type_col = [color_dict['dark_mid'], color_dict['dark_mid']];
         var content = <div />;
         switch (this.props.resource.endpoint) {
             case "pokemon":
@@ -119,30 +109,35 @@ class Card extends React.Component {
             default:
                 break;
         }
-        var link_color = this.state.hover ? type_col[0] : 'inherit';
+        var header_icon = this.state.hover ? <OpenPokeball height="70px" width="70px" /> : <Pokeball height="70px" width="70px" />;
         return (
-            <a href={"/pokedex/" + this.props.resource.endpoint + "/" + this.props.resource.index}
-                onMouseEnter={this.toggleHover}
-                onMouseLeave={this.toggleHover}
-                style={{ textDecoration: 'none', color: 'inherit' }}>
-                <div className="card_outer" style={{ background: 'linear-gradient(' + type_col[0] + ',' + type_col[1] + ')' }}>
-                    <div className="card_inner" style={{ background: color_dict['dark_bg'] }}>
-                        <div className="card_header" style={{color: link_color}}>
-                            <div className="card_header_enpoint">
-                                {toUpper(this.props.resource.endpoint)}
-                            </div>
-                            <div className="card_header_index">
-                                #{this.props.resource.index}
-                            </div>
-                        </div>
-                        <hr style={{ visibility: 'hidden' }} />
-                        <div className="card_title" style={{color: link_color}}>
-                            {toUpper(this.props.resource.name)}
-                        </div>
-                        {content}
+            <div className="card" style={{ background: color_dict['dark_bg'] }}>
+                <button onClick={() => window.location.href = "/pokedex/" + this.props.resource.endpoint + "/" + this.props.resource.index}
+                    onMouseEnter={this.toggleHover}
+                    onMouseLeave={this.toggleHover}
+                    onFocus={this.toggleHover}
+                    onBlur={this.toggleHover}
+                    style={{ textDecoration: 'none', color: 'inherit' }}
+                    className="card_header"
+                    style={{
+                        color: color_dict['dark_bg'],
+                        background: 'linear-gradient(to right, ' + type_col[0] + ' 45%, ' + type_col[1] + ' 55%)'
+                    }}>
+                    <div className="card_header_endpoint">
+                        {toUpper(this.props.resource.endpoint)}
                     </div>
+                    <div className="card_header_icon">
+                        {header_icon}
+                    </div>
+                    <div className="card_header_index">
+                        #{this.props.resource.index}
+                    </div>
+                </button>
+                <div className="card_title" style={{ color: color_dict['dark_txt'] }}>
+                    {toUpper(this.props.resource.name)}
                 </div>
-            </a>
+                {content}
+            </div>
         );
     }
 }

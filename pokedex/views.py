@@ -19,13 +19,27 @@ def get_home(request):
             endpoint_calls.update_endpoint(endpoint)
         count = 0
         for resource in Resource.objects.filter(endpoint=endpoint).order_by('index'):
-            data['resources'].append({
+            temp = {
                 'name': resource.name,
                 'index': resource.index,
                 'endpoint': endpoint.name,
-                'data': resource.data,
-                'imageURL': resource.image.url
-            })
+                'data' : None
+            }
+            if endpoint.name == 'pokemon':
+                if resource.data != None:
+                    temp['data'] = {
+                        'types' : resource.data['types'],
+                    }
+                temp['imageURL'] = resource.image.url
+            elif endpoint.name == 'move':
+                if resource.data != None:
+                    temp['data'] = {
+                        'type' : resource.data['type'],
+                        'power' : resource.data['power']['latest'],
+                        'accuracy' : resource.data['accuracy']['latest'],
+                        'damage_class' : resource.data['damage_class']
+                    }
+            data['resources'].append(temp)
             count += 1
             if count>10:
                 break

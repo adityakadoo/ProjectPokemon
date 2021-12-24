@@ -5,7 +5,7 @@ from . import views
 app_name = 'pokedex'
 urlpatterns = [
     # Home page
-    path('', views.get_home, name='home'),
+    path('home', views.get_home, name='home'),
     # Pokemon detail view page
     path('pokemon/<int:index>', views.get_pokemon, name='pokemon'),
     # Move detail view page

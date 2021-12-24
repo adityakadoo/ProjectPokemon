@@ -71,12 +71,13 @@ def update_resource(endpoint_name,resource):
             image_url = response_dict["sprites"]["other"]["dream_world"]["front_default"]
         if image_url==None:
             image_url = response_dict["sprites"]["front_default"]
-        image_response = requests.get(image_url)
-        with open("temp.png",'wb') as f:
-            f.write(image_response.content)
-        os.remove("static/images/pokemon/"+get_filename(response_dict['name']+".png"))
-        resource.image.save(get_filename("pokemon/"+response_dict['name']+".png"),File(open("temp.png",'rb')))
-        os.remove("temp.png")
+        if image_url != None:
+            image_response = requests.get(image_url)
+            with open("temp.png",'wb') as f:
+                f.write(image_response.content)
+            os.remove("static/images/pokemon/"+get_filename(response_dict['name']+".png"))
+            resource.image.save(get_filename("pokemon/"+response_dict['name']+".png"),File(open("temp.png",'rb')))
+            os.remove("temp.png")
 
         resource.data = pokemon_data
     elif endpoint_name == 'ability':
@@ -137,7 +138,36 @@ def update_resource(endpoint_name,resource):
         type_data['pokemons'] = [e['pokemon']['name'] for e in response_dict['pokemon']]
         type_data['moves'] = [e['name'] for e in response_dict['moves']]
 
-# https://upload.wikimedia.org/wikipedia/commons/3/3c/Pok%C3%A9mon_Bug_Type_Icon.svg
+        url_dict = {
+            'normal': "https://upload.wikimedia.org/wikipedia/commons/a/aa/Pok%C3%A9mon_Normal_Type_Icon.svg",
+            'fighting': "https://upload.wikimedia.org/wikipedia/commons/b/be/Pok%C3%A9mon_Fighting_Type_Icon.svg",
+            'flying': "https://upload.wikimedia.org/wikipedia/commons/e/e0/Pok%C3%A9mon_Flying_Type_Icon.svg",
+            'poison': "https://upload.wikimedia.org/wikipedia/commons/c/c4/Pok%C3%A9mon_Poison_Type_Icon.svg",
+            'ground': "https://upload.wikimedia.org/wikipedia/commons/8/8d/Pok%C3%A9mon_Ground_Type_Icon.svg",
+            'rock': "https://upload.wikimedia.org/wikipedia/commons/b/bb/Pok%C3%A9mon_Rock_Type_Icon.svg",
+            'bug': "https://upload.wikimedia.org/wikipedia/commons/3/3c/Pok%C3%A9mon_Bug_Type_Icon.svg",
+            'ghost': "https://upload.wikimedia.org/wikipedia/commons/a/a0/Pok%C3%A9mon_Ghost_Type_Icon.svg",
+            'steel': "https://upload.wikimedia.org/wikipedia/commons/3/38/Pok%C3%A9mon_Steel_Type_Icon.svg",
+            'fire': "https://upload.wikimedia.org/wikipedia/commons/5/56/Pok%C3%A9mon_Fire_Type_Icon.svg",
+            'water': "https://upload.wikimedia.org/wikipedia/commons/0/0b/Pok%C3%A9mon_Water_Type_Icon.svg",
+            'grass': "https://upload.wikimedia.org/wikipedia/commons/f/f6/Pok%C3%A9mon_Grass_Type_Icon.svg",
+            'electric': "https://upload.wikimedia.org/wikipedia/commons/a/a9/Pok%C3%A9mon_Electric_Type_Icon.svg",
+            'psychic': "https://upload.wikimedia.org/wikipedia/commons/a/ab/Pok%C3%A9mon_Psychic_Type_Icon.svg",
+            'ice': "https://upload.wikimedia.org/wikipedia/commons/8/88/Pok%C3%A9mon_Ice_Type_Icon.svg",
+            'dragon': "https://upload.wikimedia.org/wikipedia/commons/a/a6/Pok%C3%A9mon_Dragon_Type_Icon.svg",
+            'dark': "https://upload.wikimedia.org/wikipedia/commons/0/09/Pok%C3%A9mon_Dark_Type_Icon.svg",
+            'fairy': "https://upload.wikimedia.org/wikipedia/commons/0/08/Pok%C3%A9mon_Fairy_Type_Icon.svg",
+        }
+        image_url = None
+        if resource.name in url_dict.keys():
+            image_url = url_dict[resource.name]
+        if image_url != None:
+            image_response = requests.get(image_url)
+            with open("temp.svg",'wb') as f:
+                f.write(image_response.content)
+            os.remove("static/images/type/"+get_filename(response_dict['name']+".png"))
+            resource.image.save(get_filename("type/"+response_dict['name']+".svg"),File(open("temp.svg",'rb')))
+            os.remove("temp.svg")
 
         resource.data = type_data
     elif endpoint_name == 'move':

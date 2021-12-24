@@ -17,8 +17,9 @@ const color_dict = {
     rock: "#C9B787",
     steel: "#5A8FA3",
     water: "#3393DD",
-    dark_bg: "#121212",
-    light_bg: "#fefefe",
+    dark_bg: "#12121288",
+    dark_txt: "#c9c9c9",
+    dark_mid: "#787878",
 }
 
 export default color_dict;

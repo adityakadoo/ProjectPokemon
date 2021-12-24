@@ -1,48 +1,74 @@
-.card_outer {
-    display: block;
+.card {
+    display: flex;
+    flex-direction: column;
     height: max-content;
     width: 250px;
     margin: 5px;
-    padding: 15px;
-    border-radius: 20px;
-    border-color: black;
+    border-radius: 10px;
+
+    box-shadow: 0 0 2em 0.2em #525252;
+    transition: transform 500ms ease;
 }
 
-.card_inner {
-    display: block;
-    height: max-content;
-    background-color: #121212;
-    border-radius: 10px;
+.card:hover {
+    transform: scale(1.05);
 }
 
 .card_header {
-    padding: 4px;
-    text-decoration: underline;
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    display: flex;
+    padding: 0px;
+    flex-direction: row;
+    height: 40px;
+    width: 250px;
+    border-radius: 10px 10px 0px 0px;
+    border: 0px solid #00000000;
+    cursor: pointer;
+    font-family: 'Anton', sans-serif;
 }
 
-.card_title{
-    font-size: 150%;
-    font-style: italic;
-    font-weight: 900;
+.card_header_endpoint {
+    width: 100px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 20px;
+    padding-left: 5px;
+    text-align: left;
+    border-radius: 10px 0px 0px 0px;
+}
+
+.card_header_icon {
+    width: 50px;
+    height: 40px;
+    overflow: visible;
+    /* padding-bottom: 20px; */
+    position: relative;
+    top: -20px;
+    left: -10px;
+}
+
+.card_header_index {
+    width: 100px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 20px;
+    padding-right: 5px;
+    text-align: right;
+    border-radius: 0px 10px 0px 0px;
+}
+
+.card_title {
+    font-size: 30px;
+    font-family: 'Changa One', cursive;
     padding: 4px;
 }
 
 .card_content {
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    /* font-style: italic; */
-    font-weight: 700;
+    background-size: 250px;
+    background-repeat: no-repeat;
+    border-radius: 0px 0px 10px 10px;
 }
 
-.card_header_enpoint{
-    float: left;
-}
-
-.card_header_index{
-    float: right;
-}
-
-.type_icon{
+.type_icon {
     display: inline-block;
     height: 40px;
     width: 100px;
@@ -54,7 +80,7 @@
 }
 
 table, th, td {
-  border-collapse: collapse;
-  font-size: 30px;
-  font-weight: lighter;
+    border-collapse: collapse;
+    font-size: 20px;
+    font-weight: lighter;
 }
