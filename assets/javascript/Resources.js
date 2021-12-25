@@ -1,6 +1,6 @@
 const color_dict = {
     bug: "#84C400",
-    dark: "#5B5366",
+    dark: "#876464",
     dragon: "#006FCA",
     electric: "#FBD200",
     fairy: "#FB8AEC",
@@ -19,7 +19,7 @@ const color_dict = {
     water: "#3393DD",
     dark_bg: "#12121288",
     dark_txt: "#c9c9c9",
-    dark_mid: "#787878",
+    dark_mid: "#aaaaaa",
 }
 
 export default color_dict;

@@ -5,7 +5,7 @@ const SvgPokeball = (props) => (
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 100 100"
     style={{
-      filter: "drop-shadow(0 0 0.5em rgba(173 29 29 / .7))",
+      filter: props.filter,
     }}
     {...props}
   >

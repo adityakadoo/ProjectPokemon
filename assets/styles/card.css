@@ -3,7 +3,6 @@
     flex-direction: column;
     height: max-content;
     width: 250px;
-    margin: 5px;
     border-radius: 10px;
 
     box-shadow: 0 0 2em 0.2em #525252;
@@ -34,6 +33,7 @@
     padding-left: 5px;
     text-align: left;
     border-radius: 10px 0px 0px 0px;
+    overflow: hidden;
 }
 
 .card_header_icon {
@@ -54,12 +54,13 @@
     padding-right: 5px;
     text-align: right;
     border-radius: 0px 10px 0px 0px;
+    overflow: hidden;
 }
 
 .card_title {
     font-size: 30px;
     font-family: 'Changa One', cursive;
-    padding: 4px;
+    padding: 9px 4px;
 }
 
 .card_content {

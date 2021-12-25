@@ -21,14 +21,14 @@ class TypeLink extends React.Component {
         var temp_shadow = this.state.hover ? "0 0 2em 0.5em " + color_dict[this.props.typename] : "inset 0 0 0.5em 0 " + color_dict[this.props.typename] + ", 0 0 0.5em 0 " + color_dict[this.props.typename];
         var temp_text_shadow = this.state.hover ? "none" : "0 0 0.125em hsl(0 0% 100% / 0.3), 0 0 0.45em currentColor";
         return (
-            <button onClick={() => window.location.href = "/pokedex/type/" + this.props.typename}
+            <a href = {"/pokedex/type/" + this.props.typename}
                 onMouseEnter={this.toggleHover}
                 onMouseLeave={this.toggleHover}
                 onFocus={this.toggleHover}
                 onBlur={this.toggleHover}
-                style={{ textDecoration: 'none' }}
                 className="type_link"
                 style={{
+                    textDecoration: 'none',
                     borderColor: color_dict[this.props.typename],
                     backgroundColor: temp_col2,
                     color: temp_col1,
@@ -46,7 +46,7 @@ class TypeLink extends React.Component {
                 <div className="type_link_text">
                     {toUpper(this.props.typename.substring(0, 3))}
                 </div>
-            </button>
+            </a>
         );
     }
 }
