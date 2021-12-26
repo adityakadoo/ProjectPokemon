@@ -15,7 +15,8 @@ def update_endpoint(endpoint):
         new_resource,is_new = Resource.objects.get_or_create(name=response_dict["results"][i]["name"],index=i+1)
         new_resource.endpoint = endpoint
         new_resource.last_updated = timezone.now()
-        new_resource.image.save(get_filename(endpoint.name+"/"+response_dict['results'][i]['name']+".png"),File(open("static/images/default.png",'rb')))
+        if endpoint.name in ['pokemon']:
+            new_resource.image.save(get_filename(endpoint.name+"/"+response_dict['results'][i]['name']+".png"),File(open("static/images/default.png",'rb')))
         new_resource.save()
     endpoint.count = response_dict['count']
     endpoint.save()

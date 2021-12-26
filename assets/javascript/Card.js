@@ -38,11 +38,11 @@ function MoveContent(props) {
                         <tbody>
                             <tr style={{ height: '50%' }}>
                                 <td style={{ width: '50%', textAlign: 'left' }}>Power</td>
-                                <td style={{ width: '50%', textAlign: 'right' }}>{props.resource.data.power}</td>
+                                <td style={{ width: '50%', textAlign: 'right' }}>{props.resource.data.power==null ? "--" : props.resource.data.power}</td>
                             </tr>
                             <tr style={{ height: '50%' }}>
                                 <td style={{ textAlign: 'left' }}>Accuracy</td>
-                                <td style={{ textAlign: 'right' }}>{props.resource.data.accuracy}</td>
+                                <td style={{ textAlign: 'right' }}>{props.resource.data.accuracy==null ? "--" : props.resource.data.accuracy}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -135,6 +135,8 @@ class Card extends React.Component {
                         onMouseLeave={this.setHoverOff}
                         onFocus={this.setHoverOn}
                         onBlur={this.setHoverOff}
+                        onTouchStart={this.setHoverOn}
+                        onTouchEnd={this.setHoverOff}
                         className="card_header_icon">
                         {header_icon}
                     </a>

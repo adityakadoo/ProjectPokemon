@@ -8,6 +8,9 @@ import json
 
 RENEWAL_PERIOD = 180
 
+def fixed_name(s):
+    return s.replace('-',' ')
+
 def get_home(request):
     data = {
         'resources' : [],
@@ -17,32 +20,33 @@ def get_home(request):
         renewal_period = timedelta(days=RENEWAL_PERIOD)
         if endpoint.last_updated + renewal_period < now:
             endpoint_calls.update_endpoint(endpoint)
-        count = 0
-        for resource in Resource.objects.filter(endpoint=endpoint).order_by('index'):
-            temp = {
-                'name': resource.name,
-                'index': resource.index,
-                'endpoint': endpoint.name,
-                'data' : None
-            }
-            if endpoint.name == 'pokemon':
-                if resource.data != None:
-                    temp['data'] = {
-                        'types' : resource.data['types'],
-                    }
-                temp['imageURL'] = resource.image.url
-            elif endpoint.name == 'move':
-                if resource.data != None:
-                    temp['data'] = {
-                        'type' : resource.data['type'],
-                        'power' : resource.data['power']['latest'],
-                        'accuracy' : resource.data['accuracy']['latest'],
-                        'damage_class' : resource.data['damage_class']
-                    }
-            data['resources'].append(temp)
-            count += 1
-            if count>10:
-                break
+    count = 0
+    for resource in Resource.objects.order_by('?'):
+        endpoint = resource.endpoint
+        temp = {
+            'name': fixed_name(resource.name),
+            'index': resource.index,
+            'endpoint': fixed_name(endpoint.name),
+            'data' : None
+        }
+        if endpoint.name == 'pokemon':
+            if resource.data != None:
+                temp['data'] = {
+                    'types' : resource.data['types'],
+                }
+            temp['imageURL'] = resource.image.url
+        elif endpoint.name == 'move':
+            if resource.data != None:
+                temp['data'] = {
+                    'type' : resource.data['type'],
+                    'power' : resource.data['power']['latest'],
+                    'accuracy' : resource.data['accuracy']['latest'],
+                    'damage_class' : resource.data['damage_class']
+                }
+        data['resources'].append(temp)
+        count += 1
+        if count>=50:
+            break
     context = {'context_str' : json.dumps(data)}
     return render(request,'pokedex/index.html',context)
 

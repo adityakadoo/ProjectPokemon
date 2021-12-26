@@ -26,6 +26,8 @@ class TypeLink extends React.Component {
                 onMouseLeave={this.toggleHover}
                 onFocus={this.toggleHover}
                 onBlur={this.toggleHover}
+                onTouchStart={this.toggleHover}
+                onTouchEnd={this.toggleHover}
                 className="type_link"
                 style={{
                     textDecoration: 'none',
