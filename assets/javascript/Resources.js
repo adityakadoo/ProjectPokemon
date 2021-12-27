@@ -19,7 +19,7 @@ const color_dict = {
     water: "#3393DD",
     dark_bg: "#12121288",
     dark_txt: "#c9c9c9",
-    dark_mid: "#aaaaaa",
+    dark_mid: "#888888",
 }
 
 export default color_dict;

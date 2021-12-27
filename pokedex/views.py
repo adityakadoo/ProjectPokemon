@@ -20,8 +20,8 @@ def get_home(request):
         renewal_period = timedelta(days=RENEWAL_PERIOD)
         if endpoint.last_updated + renewal_period < now:
             endpoint_calls.update_endpoint(endpoint)
-    count = 0
-    for resource in Resource.objects.order_by('?'):
+    # count = 0
+    for resource in Resource.objects.order_by("?"):
         endpoint = resource.endpoint
         temp = {
             'name': fixed_name(resource.name),
@@ -44,9 +44,9 @@ def get_home(request):
                     'damage_class' : resource.data['damage_class']
                 }
         data['resources'].append(temp)
-        count += 1
-        if count>=50:
-            break
+        # count += 1
+        # if count>=50:
+        #     break
     context = {'context_str' : json.dumps(data)}
     return render(request,'pokedex/index.html',context)
 
