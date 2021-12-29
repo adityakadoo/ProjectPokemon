@@ -1,24 +1,11 @@
-import requests
-from pokedex.models import Game, Version
+from pokedex.api_calls import resource_calls
+from pokedex.models import Resource, Endpoint
 
 def run(*args):
-    base_url = "https://pokeapi.co/api/v2/version/"
+    game_endpoint = Endpoint.objects.get(name='version-group')
 
-    i = 1
-    while True:
-        url = base_url+str(i)
-        response = requests.get(url)
-        
-        if response.status_code!=200:
-            break
-
-        response_dict = response.json()
-        if response_dict["name"]=="colosseum" or response_dict["name"]=="xd":
-            i = i+1
-            continue
-        game_temp = Game(index = response_dict["id"],name = response_dict["name"])
-        version_temp = Version.objects.get(name=response_dict["version_group"]["name"])
-        game_temp.version = version_temp
-
-        game_temp.save()
-        i = i+1
+    for game_resource in Resource.objects.filter(endpoint=game_endpoint):
+        if resource_calls.update_resource('version-group',game_resource):
+            print(".",end="")
+        else:
+            print("![#"+str(game_resource.index)+" "+game_resource.name+"]",end="")

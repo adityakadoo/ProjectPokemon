@@ -3,6 +3,7 @@
     flex-direction: row;
     flex-wrap: wrap;
     gap: 40px;
+    overflow-y: scroll;
 }
 
 .search_bar {
@@ -13,18 +14,20 @@
 }
 
 .search_box {
-    flex-grow: 2;
+    flex-grow: 1;
     overflow: hidden;
     display: flex;
     border-radius: 25px;
     height: 50px;
     padding: 5px;
+    position: relative;
+    box-shadow: 0 0 2em 0.2em #525252;
 }
 
 .search_box_input {
     flex-grow: 1;
-    font-size: 30px;
-    padding: 0 25px;
+    font-size: 20px;
+    padding: 0 15px;
     line-height: 100%;
     border: 0;
     background: transparent;
@@ -34,31 +37,25 @@
     outline: none;
 }
 
-.filter_sort_box {
-    flex-grow: 1;
-    overflow: visible;
-    display: inline;
-    border-radius: 25px;
-    height: 50px;
+.search_icon {
+    padding: 8px;
+    border-radius: 20px;
+    height: 36px;
+    width: 36px;
+    position: absolute;
+    border: none;
+    cursor: pointer;
+    color: #12121288;
 }
 
-.filter_sort_box_input {
-    flex-grow: 1;
-    font-size: 30px;
-    padding: 0 25px;
-    line-height: 100%;
-    border: 0;
-    background: transparent;
-}
-
-.filter_sort_box_input:focus {
-    outline: none;
+.search_icon:hover {
+    color: hsl(0 0% 60%);
 }
 
 .resource_list_main {
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
+    justify-content: space-between;
     gap: 40px;
 
     width: max(95%, 250px);
@@ -70,4 +67,5 @@
     display: flex;
     flex-direction: column;
     gap: 40px;
+    flex-grow: 1;
 }

@@ -14,19 +14,27 @@ def fixed_name(s):
 def get_home(request):
     data = {
         'resources' : [],
+        'filters': {
+            'pokedexes' : [],
+            'types' : [],
+            'endpoints' : ['pokemon', 'move', 'type', 'ability']
+        }
     }
     for endpoint in Endpoint.objects.all():
         now = timezone.now()
         renewal_period = timedelta(days=RENEWAL_PERIOD)
         if endpoint.last_updated + renewal_period < now:
             endpoint_calls.update_endpoint(endpoint)
-    # count = 0
-    for resource in Resource.objects.order_by("?"):
+    
+    for resource in Resource.objects.exclude(
+            endpoint__name='pokedex').exclude(
+            endpoint__name='version-group').exclude(
+            endpoint__name='version').order_by("?"):
         endpoint = resource.endpoint
         temp = {
-            'name': fixed_name(resource.name),
+            'name': resource.name,
             'index': resource.index,
-            'endpoint': fixed_name(endpoint.name),
+            'endpoint': endpoint.name,
             'data' : None
         }
         if endpoint.name == 'pokemon':
@@ -44,19 +52,27 @@ def get_home(request):
                     'damage_class' : resource.data['damage_class']
                 }
         data['resources'].append(temp)
-        # count += 1
-        # if count>=50:
-        #     break
+        
+    for resource in Resource.objects.filter(endpoint__name='pokedex'):
+        data['filters']['pokedexes'].append({
+            'name': fixed_name(resource.name),
+            'pokemons' : resource.data['pokemons'],
+            'version-groups' : resource.data['version-groups']
+        })
+    
+    for resource in Resource.objects.filter(endpoint__name='type'):
+        data['filters']['types'].append(resource.name)
+    
     context = {'context_str' : json.dumps(data)}
     return render(request,'pokedex/index.html',context)
 
-def get_resource(endpoint_name,resource_index):
+def get_resource(endpoint_name,resource_name):
     try:
         endpoint = Endpoint.objects.get(name=endpoint_name)
     except Endpoint.DoesNotExist:
         raise Http404
     try:
-        resource = Resource.objects.get(index=resource_index, endpoint=endpoint)
+        resource = Resource.objects.get(name=resource_name, endpoint=endpoint)
     except Resource.DoesNotExist:
         raise Http404
     now = timezone.now()
@@ -65,8 +81,8 @@ def get_resource(endpoint_name,resource_index):
         resource_calls.update_resource(endpoint_name,resource)
     return resource
 
-def get_pokemon(request,index):
-    pokemon = get_resource('pokemon', index)
+def get_pokemon(request,name):
+    pokemon = get_resource('pokemon', name)
     data = {
         'name' : pokemon.name,
         'index' : pokemon.index
@@ -74,17 +90,17 @@ def get_pokemon(request,index):
     context = {'context_str' : json.dumps(data)}
     return render(request,'pokedex/pokemon.html',context)
 
-def get_move(request,index):
-    move = get_resource('move', index)
+def get_move(request,name):
+    move = get_resource('move', name)
     response = "<html><body>Hello "+str(move.name)+"</body></html>"
     return HttpResponse(response)
 
-def get_type(request,index):
-    type = get_resource('type', index)
+def get_type(request,name):
+    type = get_resource('type', name)
     response = "<html><body>Hello "+str(type.name)+"</body></html>"
     return HttpResponse(response)
 
-def get_ability(request,index):
-    ability = get_resource('ability', index)
+def get_ability(request,name):
+    ability = get_resource('ability', name)
     response = "<html><body>Hello "+str(ability.name)+"</body></html>"
     return HttpResponse(response)

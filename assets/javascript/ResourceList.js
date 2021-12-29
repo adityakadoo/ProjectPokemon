@@ -1,12 +1,18 @@
 import React from 'react';
 import Card from './Card.js';
 import '../styles/resource_list.css';
-import { floor, max, random } from 'lodash';
+import { floor, max, min } from 'lodash';
 import color_dict from './Resources.js';
+import getFilterOptions from './filterOptions.js';
 import { components, default as ReactSelect } from "react-select";
+import { Search } from './IconComponents/index';
 
 function elementWidth(id) {
     return document.getElementById(id).clientWidth;
+}
+
+function elementHeight(id) {
+    return document.getElementById(id).clientHeight;
 }
 
 function debounce(fn, ms) {
@@ -29,148 +35,55 @@ function Option(props) {
                     checked={props.isSelected}
                     onChange={() => null}
                 />{" "}
-                <label>{props.label}</label>
+                <label style={{
+                    padding: "5px",
+                    margin: "5px",
+                }}>
+                    {props.label}
+                </label>
+                <hr style={{ borderColor: color_dict['dark_txt'] }} />
             </components.Option>
         </div>
     );
 };
 
-const filterOptions = [
-    {
-        value: "random",
-        label: "Sort: Random Order",
-        filter: (value) => {
-            return true;
-        },
-        sort: (value1, value2) => {
-            return 2 * random(0, 1, false) - 1;
-        }
-    },
-    {
-        value: "default",
-        label: "Sort: Type and Index",
-        filter: (value) => {
-            return true;
-        },
-        sort: (value1, value2) => {
-            const endpoint_ordering = {
-                "pokemon": 1,
-                "move": 2,
-                "type": 3,
-                "ability": 4,
-                "version": 5,
-                "version-group": 6,
-                "pokedex": 7
-            }
-            if (value1.endpoint == value2.endpoint) {
-                return value1.index - value2.index;
-            }
-            return endpoint_ordering[value1.endpoint] - endpoint_ordering[value2.endpoint];
-        }
-    },
-    {
-        value: "end-pokemon",
-        label: "Filter: Only Pokemon",
-        filter: (value) => {
-            return value.endpoint == "pokemon";
-        },
-        sort: (value1, value2) => {
-            return value1.index - value2.index;
-        }
-    },
-    {
-        value: "end-move",
-        label: "Filter: Only Moves",
-        filter: (value) => {
-            return value.endpoint == "move";
-        },
-        sort: (value1, value2) => {
-            return value1.index - value2.index;
-        }
-    },
-    {
-        value: "end-type",
-        label: "Filter: Only Types",
-        filter: (value) => {
-            return value.endpoint == "type";
-        },
-        sort: (value1, value2) => {
-            return value1.index - value2.index;
-        }
-    },
-    {
-        value: "end-ability",
-        label: "Filter: Only Abilities",
-        filter: (value) => {
-            return value.endpoint == "ability";
-        },
-        sort: (value1, value2) => {
-            return value1.index - value2.index;
-        }
-    },
-    {
-        value: "type-fire",
-        label: "Filter: Only Fire Types",
-        filter: (value) => {
-            switch (value.endpoint) {
-                case "pokemon":
-                    return value.data.types.includes("fire");
-                case "type":
-                    return value.name == "fire";
-                case "move":
-                    return value.data.type == "fire";
-                default:
-                    return false;
-            }
-        },
-        sort: (value1, value2) => {
-            const endpoint_ordering = {
-                "pokemon": 2,
-                "move": 3,
-                "type": 1,
-            }
-            if (value1.endpoint == value2.endpoint) {
-                return value1.index - value2.index;
-            }
-            return endpoint_ordering[value1.endpoint] - endpoint_ordering[value2.endpoint];
-        }
-    }
-];
-
 function ResourceList(props) {
-    const [parentDimension, setDimensions] = React.useState({
-        height: 0,
+    const [parentDimensions, setDimensions] = React.useState({
+        height: elementHeight(props.parent),
         width: elementWidth(props.parent)
     });
 
     React.useEffect(() => {
         const debouncedHandleResize = debounce(function handleResize() {
             setDimensions({
-                width: elementWidth(props.parent)
+                width: elementWidth(props.parent),
+                height: elementHeight(props.parent)
             })
-        }, 300)
-
-        window.addEventListener('resize', debouncedHandleResize)
-
+        }, 300);
+        window.addEventListener('resize', debouncedHandleResize);
         return _ => {
-            window.removeEventListener('resize', debouncedHandleResize)
-
-        }
+            window.removeEventListener('resize', debouncedHandleResize);
+        };
     });
 
     const [listData, setListData] = React.useState(props.resources);
+    const [searchWord, setSearchWord] = React.useState("");
+    const [pageIndex, setPageIndex] = React.useState(0);
+    const pageSize = 60;
 
-    var numCols = floor((max([parentDimension.width - 80, 250]) + 40) / 290);
+    var numCols = min([floor((max([parentDimensions.width - 80, 250]) + 40) / 290), listData.length]);
     var cols = [];
     for (var i = 0; i < numCols; i++) {
         cols.push([]);
     }
-    for (var i = 0; i < 60; i++) {
-        cols[i % numCols].push(
-            <div key={"col_" + (i % numCols) + "_item_" + i}>
-                <Card resource={listData[i]} />
-            </div>
-        );
+    if (numCols != 0) {
+        for (var i = 0; i < pageSize; i++) {
+            cols[i % numCols].push(
+                <div key={"col_" + (i % numCols) + "_item_" + i}>
+                    <Card resource={listData[pageIndex * pageSize + i]} />
+                </div>
+            );
+        }
     }
     var grid = [];
     for (var i = 0; i < cols.length; i++) {
@@ -181,42 +94,61 @@ function ResourceList(props) {
         );
     }
 
-    const handleSearch = (event) => {
-        const searchWord = event.target.value;
-        const newResources = props.resources.filter((value) => {
+    const handleSearch = () => {
+        var newResources = props.resources.filter((value) => {
             return value.name.includes(searchWord);
         })
+        filterSelected.forEach(element => {
+            if (element.filter != null)
+                newResources = newResources.filter(element.filter);
+            if (element.sort != null)
+                newResources = newResources.sort(element.sort);
+        });
         setListData(newResources);
+        setPageIndex(0);
     }
 
-    const [filterSelected, setFilterSelected] = React.useState(null);
+    const [filterSelected, setFilterSelected] = React.useState([]);
 
     const handleFilter = (event) => {
-        const newResources = props.resources.filter(event.filter).sort(event.sort);
+        var newResources = props.resources.filter((value) => {
+            return value.name.includes(searchWord);
+        })
+        event.forEach(element => {
+            if (element.filter != null)
+                newResources = newResources.filter(element.filter);
+            if (element.sort != null)
+                newResources = newResources.sort(element.sort);
+        });
         setListData(newResources);
         setFilterSelected(event);
+        setPageIndex(0);
     }
 
     return (
         <div className="resource_list">
-            <div className="search_bar" style={{ width: parentDimension.width }}>
+            <div className="search_bar" style={{ width: parentDimensions.width }}>
                 <div className="search_box" style={{
-                    border: "2px solid " + color_dict['dark_bg'],
-                    background: color_dict['dark_txt'],
+                    border: "2px solid " + color_dict['dark_txt'],
+                    background: color_dict['transparent_bg'],
                 }}>
                     <input type="text"
                         className="search_box_input"
-                        placeholder="Search a keyword.."
-                        onChange={handleSearch}
-                        style={{ color: color_dict['dark_bg'] }} />
+                        placeholder="Search a keyword..."
+                        onChange={(event) => setSearchWord(event.target.value)}
+                        style={{ color: color_dict['dark_txt'] }} />
+                    <button className="search_icon"
+                        onClick={handleSearch}
+                        style={{ background: color_dict['light_mid'], right: "5px", top: "5px", fontSize: "120%" }}>
+                        <i className="fas fa-search"></i>
+                    </button>
                 </div>
-                {/* <div className="filter_sort_box" style={{  }}> */}
-                {/* <input type="text" className="filter_sort_box_input" placeholder="Add a filter.." /> */}
                 <ReactSelect
-                    options={filterOptions}
+                    options={getFilterOptions(props.filters)}
+                    isMulti
                     closeMenuOnSelect={false}
                     hideSelectedOptions={false}
-                    placeholder="Add a filter"
+                    placeholder="Add a filter or sort..."
                     components={{
                         Option
                     }}
@@ -226,7 +158,10 @@ function ResourceList(props) {
                     styles={{
                         container: (base) => ({
                             ...base,
-                            flexGrow: "2",
+                            minWidth: "350px",
+                            flexGrow: 1,
+                            borderRadius: "25px",
+                            boxShadow: "0 0 2em 0.2em #525252"
                         }),
                         control: (base) => ({
                             display: "flex",
@@ -235,68 +170,105 @@ function ResourceList(props) {
                             justifyContent: "space-between",
                             border: "none",
                             background: "transparent",
-                            cursor: "crosshair",
-                            border: "2px solid " + color_dict['dark_bg'],
-                            background: color_dict['dark_txt'],
+                            cursor: "text",
+                            border: "2px solid " + color_dict['dark_txt'],
+                            background: color_dict['transparent_bg'],
                             borderRadius: "25px",
-                            height: "50px",
-                            padding: "5px"
+                            minHeight: "50px",
+                            padding: "5px",
+                            color: color_dict['dark_txt']
                         }),
                         valueContainer: (base) => ({
-                            height: "36px"
+                            ...base,
+                            minHeight: "36px",
+                            padding: "0 5px",
+                            overflow: "visible",
+                            gap: "2px"
                         }),
                         input: (base) => ({
                             ...base,
                             lineHeight: "100%",
-                            fontSize: "30px",
-                            padding: "0 25px",
-                            height: "36px",
-                            minHeight: "36px",
-                            margin: "0",
-                            position: "absolute",
-                            top: "4px",
-                            color: color_dict['dark_bg']
+                            fontSize: "20px",
+                            height: "25px",
+                            margin: "0 5px"
                         }),
                         placeholder: (base) => ({
                             ...base,
                             lineHeight: "100%",
-                            fontSize: "30px",
-                            padding: "4px 25px",
+                            fontSize: "20px",
                             height: "36px",
-                            minHeight: "36px",
-                            margin: "0",
-                            zIndex: "-5"
+                            padding: "8px 0",
+                            margin: "0 5px"
                         }),
                         singleValue: (base) => ({
                             ...base,
                             lineHeight: "100%",
-                            fontSize: "30px",
+                            fontSize: "20px",
                             padding: "4px 25px",
                             height: "36px",
                             minHeight: "36px",
                             margin: "0",
                             zIndex: "-5",
-                            color: color_dict['dark_bg']
+                            color: color_dict['dark_txt']
                         }),
                         menu: (base) => ({
                             ...base,
-                            border: "2px solid " + color_dict['dark_bg'],
-                            background: color_dict['dark_txt'],
+                            border: "2px solid " + color_dict['dark_txt'],
+                            background: color_dict['transparent_txt'],
                             borderRadius: "25px",
-                            padding: "10px",
-                            color: color_dict['dark_bg']
+                            padding: "10px"
+                        }),
+                        multiValue: (base) => ({
+                            display: "flex",
+                            borderRadius: "25px",
+                            background: color_dict['light_mid']
                         }),
                         indicatorSeparator: (base) => ({
                             ...base,
-                            background: color_dict['dark_tbg'],
+                            background: color_dict['transparent_bg'],
                         }),
                         indicatorsContainer: (base) => ({
                             ...base,
-                            color: color_dict['dark_tbg'],
+                            background: color_dict['light_mid'],
+                            borderRadius: "25px"
                         }),
+                        clearIndicator: (base) => ({
+                            ...base,
+                            color: color_dict["transparent_txt"],
+                            cursor: "pointer"
+                        }),
+                        dropdownIndicator: (base) => ({
+                            ...base,
+                            color: color_dict["transparent_txt"],
+                            cursor: "pointer"
+                        }),
+                        option: (base) => ({
+                            borderRadius: "25px",
+                            background: "transparent",
+                            fontWeight: "700"
+                        })
                     }}
                 />
-                {/* </div> */}
+                <div className="search_box" style={{
+                    border: "2px solid " + color_dict['dark_txt'],
+                    background: color_dict['transparent_bg'],
+                }}>
+                    <button className="search_icon" style={{ left: "5px", top: "5px", fontSize: "120%" }} onClick={() => {
+                        if (pageIndex > 0)
+                            setPageIndex(pageIndex - 1);
+                    }}>
+                        <i className="fas fa-angle-left"></i>
+                    </button>
+                    <div className="search_box_input" style={{ color: color_dict['dark_txt'], margin: "0 40px", padding: "8px 0", textAlign: "center" }}>
+                        {(pageIndex * pageSize + 1) + " - " + min([listData.length, (pageIndex + 1) * pageSize + 1]) + " of " + listData.length}
+                    </div>
+                    <button className="search_icon" style={{ right: "5px", top: "5px", fontSize: "120%" }} onClick={() => {
+                        if ((pageIndex + 1) * pageSize < listData.length)
+                            setPageIndex(pageIndex + 1);
+                    }}>
+                        <i className="fas fa-angle-right"></i>
+                    </button>
+                </div>
             </div>
             <div className="resource_list_main">
                 {grid}

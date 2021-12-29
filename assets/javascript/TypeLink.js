@@ -16,8 +16,8 @@ class TypeLink extends React.Component {
     }
 
     render() {
-        var temp_col1 = this.state.hover ? color_dict['dark_bg'] : color_dict[this.props.typename];
-        var temp_col2 = this.state.hover ? color_dict[this.props.typename] : color_dict['dark_bg'];
+        var temp_col1 = this.state.hover ? color_dict['transparent_txt'] : color_dict[this.props.typename];
+        var temp_col2 = this.state.hover ? color_dict[this.props.typename] : color_dict['transparent_txt'];
         var temp_shadow = this.state.hover ? "0 0 2em 0.5em " + color_dict[this.props.typename] : "inset 0 0 0.5em 0 " + color_dict[this.props.typename] + ", 0 0 0.5em 0 " + color_dict[this.props.typename];
         var temp_text_shadow = this.state.hover ? "none" : "0 0 0.125em hsl(0 0% 100% / 0.3), 0 0 0.45em currentColor";
         return (
@@ -42,7 +42,7 @@ class TypeLink extends React.Component {
                     <TypeIcon type={this.props.typename}
                         height='35px'
                         col1={color_dict[this.props.typename]}
-                        col2={color_dict['dark_bg']}
+                        col2={color_dict['transparent_txt']}
                         alt={this.props.typename + " icon"} />
                 </div>
                 <div className="type_link_text">

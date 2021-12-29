@@ -8,43 +8,43 @@ import { BugTypeIcon, DarkTypeIcon, DragonTypeIcon, ElectricTypeIcon,
 function TypeIcon(props) {
     switch (props.type) {
         case 'bug':
-            return <BugTypeIcon {...props} />
+            return <BugTypeIcon {...props} />;
         case 'dark':
-            return <DarkTypeIcon {...props} />
+            return <DarkTypeIcon {...props} />;
         case 'dragon':
-            return <DragonTypeIcon {...props} />
+            return <DragonTypeIcon {...props} />;
         case 'electric':
-            return <ElectricTypeIcon {...props} />
+            return <ElectricTypeIcon {...props} />;
         case 'fairy':
-            return <FairyTypeIcon {...props} />
+            return <FairyTypeIcon {...props} />;
         case 'fighting':
-            return <FightingTypeIcon {...props} />
+            return <FightingTypeIcon {...props} />;
         case 'flying':
-            return <FlyingTypeIcon {...props} />
+            return <FlyingTypeIcon {...props} />;
         case 'fire':
-            return <FireTypeIcon {...props} />
+            return <FireTypeIcon {...props} />;
         case 'ghost':
-            return <GhostTypeIcon {...props} />
+            return <GhostTypeIcon {...props} />;
         case 'grass':
-            return <GrassTypeIcon {...props} />
+            return <GrassTypeIcon {...props} />;
         case 'ground':
-            return <GroundTypeIcon {...props} />
+            return <GroundTypeIcon {...props} />;
         case 'ice':
-            return <IceTypeIcon {...props} />
+            return <IceTypeIcon {...props} />;
         case 'normal':
-            return <NormalTypeIcon {...props} />
+            return <NormalTypeIcon {...props} />;
         case 'poison':
-            return <PoisonTypeIcon {...props} />
+            return <PoisonTypeIcon {...props} />;
         case 'psychic':
-            return <PsychicTypeIcon {...props} />
+            return <PsychicTypeIcon {...props} />;
         case 'rock':
-            return <RockTypeIcon {...props} />
+            return <RockTypeIcon {...props} />;
         case 'steel':
-            return <SteelTypeIcon {...props} />
+            return <SteelTypeIcon {...props} />;
         case 'water':
-            return <WaterTypeIcon {...props} />
+            return <WaterTypeIcon {...props} />;
         default:
-            return <div />;
+            return <NormalTypeIcon {...props} />;
     }
 }
 
