@@ -22,4 +22,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('pokedex/', include('pokedex.urls')),
     # path(settings.MEDIA_URL,(r'media/(?P<path>.*)$', 'django.views.static.serve',{'document_root': settings.MEDIA_ROOT}),)
+    path('tools/', include('tools.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

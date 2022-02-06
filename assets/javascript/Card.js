@@ -1,5 +1,5 @@
 import { toUpper } from 'lodash';
-import React from 'react';
+import React, { useState } from 'react';
 import "../styles/card.css";
 import color_dict from './Resources';
 import TypeIcon from './TypeIcon';
@@ -8,10 +8,61 @@ import TypeLink from './TypeLink';
 import { OpenPokeball, Pokeball } from './IconComponents/index';
 
 function PokemonContent(props) {
+    const [hover, setHover] = React.useState(false);
+
+    const toggleHover = () => {
+        setHover(!hover);
+    }
+
     if (props.resource.data.types.length == 2) {
         return (
-            <div className='card_content' style={{ backgroundImage: "linear-gradient(transparent 50%, " + color_dict['transparent_bg'] + " 80%), url(.." + props.resource.imageURL + ")", paddingTop: "76%" }}>
-                <div style={{ display: 'flex', flexDirection: 'row' }}>
+            <div className='card_content'
+                onMouseEnter={toggleHover}
+                onMouseLeave={toggleHover}
+                style={{
+                    backgroundImage: "linear-gradient(transparent 50%, " + color_dict['transparent_bg'] + " 80%), url(.." + props.resource.imageURL + ")",
+                    // paddingTop: hover ? "0%" : "76%"
+                }}>
+                <div style={{
+                    padding: "15% 10% 0 5%",
+                    height: "56%",
+                    backgroundImage: "linear-gradient(transparent 10%, " + color_dict['transparent_txt'] + " 20%)",
+                    visibility: hover ? 'visible' : 'hidden'
+                }}>
+                    <table style={{ width: '100%', height: '100%' }}>
+                        <tbody>
+                            <tr style={{ height: '17%' }}>
+                                <td style={{ width: '50%', textAlign: 'left' }}>HP</td>
+                                <td style={{ width: '50%', textAlign: 'right' }}>{props.resource.data.hp == null ? "--" : props.resource.data.hp}</td>
+                            </tr>
+                            <tr style={{ height: '16%' }}>
+                                <td style={{ textAlign: 'left' }}>Attack</td>
+                                <td style={{ textAlign: 'right' }}>{props.resource.data.attack == null ? "--" : props.resource.data.attack}</td>
+                            </tr>
+                            <tr style={{ height: '17%' }}>
+                                <td style={{ textAlign: 'left' }}>Defense</td>
+                                <td style={{ textAlign: 'right' }}>{props.resource.data.defense == null ? "--" : props.resource.data.defense}</td>
+                            </tr>
+                            <tr style={{ height: '17%' }}>
+                                <td style={{ textAlign: 'left' }}>Sp. Attack</td>
+                                <td style={{ textAlign: 'right' }}>{props.resource.data.sp_attack == null ? "--" : props.resource.data.sp_attack}</td>
+                            </tr>
+                            <tr style={{ height: '16%' }}>
+                                <td style={{ textAlign: 'left' }}>Sp. Defense</td>
+                                <td style={{ textAlign: 'right' }}>{props.resource.data.defense == null ? "--" : props.resource.data.sp_defense}</td>
+                            </tr>
+                            <tr style={{ height: '17%' }}>
+                                <td style={{ textAlign: 'left' }}>Speed</td>
+                                <td style={{ textAlign: 'right' }}>{props.resource.data.speed == null ? "--" : props.resource.data.speed}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    backgroundColor: hover ? color_dict['transparent_txt'] : 'transparent'
+                }}>
                     <TypeLink typename={props.resource.data.types[0]} />
                     <TypeLink typename={props.resource.data.types[1]} />
                 </div>
@@ -20,8 +71,53 @@ function PokemonContent(props) {
     }
     else if (props.resource.data.types.length == 1) {
         return (
-            <div className='card_content' style={{ backgroundImage: "linear-gradient(transparent 50%, " + color_dict['transparent_bg'] + " 80%), url(.." + props.resource.imageURL + ")", paddingTop: "76%" }}>
-                <div style={{ display: 'flex', flexDirection: 'row' }}>
+            <div className='card_content'
+                onMouseEnter={toggleHover}
+                onMouseLeave={toggleHover}
+                style={{
+                    backgroundImage: "linear-gradient(transparent 50%, " + color_dict['transparent_bg'] + " 80%), url(.." + props.resource.imageURL + ")",
+                    // paddingTop: hover ? "0%" : "76%"
+                }}>
+                <div style={{
+                    padding: "15% 10% 0 5%",
+                    height: "56%",
+                    backgroundImage: "linear-gradient(transparent 10%, " + color_dict['transparent_txt'] + " 20%)",
+                    visibility: hover ? 'visible' : 'hidden'
+                }}>
+                    <table style={{ width: '100%', height: '100%' }}>
+                        <tbody>
+                            <tr style={{ height: '17%' }}>
+                                <td style={{ width: '50%', textAlign: 'left' }}>HP</td>
+                                <td style={{ width: '50%', textAlign: 'right' }}>{props.resource.data.hp == null ? "--" : props.resource.data.hp}</td>
+                            </tr>
+                            <tr style={{ height: '16%' }}>
+                                <td style={{ textAlign: 'left' }}>Attack</td>
+                                <td style={{ textAlign: 'right' }}>{props.resource.data.attack == null ? "--" : props.resource.data.attack}</td>
+                            </tr>
+                            <tr style={{ height: '17%' }}>
+                                <td style={{ textAlign: 'left' }}>Defense</td>
+                                <td style={{ textAlign: 'right' }}>{props.resource.data.defense == null ? "--" : props.resource.data.defense}</td>
+                            </tr>
+                            <tr style={{ height: '17%' }}>
+                                <td style={{ textAlign: 'left' }}>Sp. Attack</td>
+                                <td style={{ textAlign: 'right' }}>{props.resource.data.sp_attack == null ? "--" : props.resource.data.sp_attack}</td>
+                            </tr>
+                            <tr style={{ height: '16%' }}>
+                                <td style={{ textAlign: 'left' }}>Sp. Defense</td>
+                                <td style={{ textAlign: 'right' }}>{props.resource.data.defense == null ? "--" : props.resource.data.sp_defense}</td>
+                            </tr>
+                            <tr style={{ height: '17%' }}>
+                                <td style={{ textAlign: 'left' }}>Speed</td>
+                                <td style={{ textAlign: 'right' }}>{props.resource.data.speed == null ? "--" : props.resource.data.speed}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    backgroundColor: hover ? color_dict['transparent_txt'] : 'transparent'
+                }}>
                     <TypeLink typename={props.resource.data.types[0]} />
                 </div>
             </div>
@@ -33,7 +129,7 @@ function MoveContent(props) {
     return (
         <div className='card_content'>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <div style={{ padding: "0 20%" }}>
+                <div style={{ padding: "0 10%" }}>
                     <table style={{ width: '100%', height: '90px' }}>
                         <tbody>
                             <tr style={{ height: '50%' }}>
@@ -47,7 +143,10 @@ function MoveContent(props) {
                         </tbody>
                     </table>
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'row'
+                }}>
                     <TypeLink typename={props.resource.data.type} />
                     <div style={{ padding: "0 20%" }}>
                         <DamageClassIcon damageclass={props.resource.data.damage_class} height="50px" />

@@ -29,8 +29,8 @@ const getFilterOptions = (filters) => {
     ];
     filters.pokedexes.forEach(element => {
         filterOptions.push({
-            value: "pokedex-" + element.name,
-            label: "Pokedex: " + toUpper(element.name),
+            value: element.category + "-" + element.name,
+            label: element.category + ": " + toUpper(element.name),
             filter: (value) => {
                 if (value.endpoint == "pokemon")
                     return element.pokemons.includes(value.name);

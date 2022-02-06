@@ -41,6 +41,12 @@ def get_home(request):
             if resource.data != None:
                 temp['data'] = {
                     'types' : resource.data['types'],
+                    'hp' : resource.data['hp'],
+                    'attack' : resource.data['attack'],
+                    'defense' : resource.data['defense'],
+                    'sp_attack' : resource.data['sp_attack'],
+                    'sp_defense' : resource.data['sp_defense'],
+                    'speed' : resource.data['speed'],
                 }
             temp['imageURL'] = resource.image.url
         elif endpoint.name == 'move':
@@ -57,6 +63,7 @@ def get_home(request):
         data['filters']['pokedexes'].append({
             'name': fixed_name(resource.name),
             'pokemons' : resource.data['pokemons'],
+            'category': "Pokedex",
             'version-groups' : resource.data['version-groups']
         })
     

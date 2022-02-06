@@ -2,6 +2,7 @@ import requests
 from django.utils import timezone
 import os
 from django.core.files import File
+from pokedex.models import Resource
 
 def remove_escape_chars(s):
     escapes = ''.join([chr(char) for char in range(1, 32)])
@@ -44,10 +45,17 @@ def update_resource(endpoint_name,resource):
         species_response = requests.get(species_url)
         species_response_dict = species_response.json()
 
+        pokemon_data['next_evolution'] = []
+
         if species_response_dict["evolves_from_species"] is None:
             pokemon_data['prev_evolution'] = None
         else:
             pokemon_data['prev_evolution'] = species_response_dict["evolves_from_species"]["name"]
+            pre_pokemon_resource = Resource.objects.get(endpoint__name=endpoint_name,name=pokemon_data['prev_evolution'])
+            if 'next_evolution' not in pre_pokemon_resource.data.keys():
+                pre_pokemon_resource.data['next_evolution'] = [resource.name]
+            else:
+                pre_pokemon_resource.data['next_evolution'].append(resource.name)
 
         pokemon_data['pokedex_entries'] = dict()
         for e in species_response_dict["flavor_text_entries"]:
